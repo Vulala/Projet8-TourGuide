@@ -1,0 +1,6 @@
+tourguide/TestPerformance.java
+ tourguide.TestPerformance
+tourguide/TestTourGuideService.java
+ tourguide.TestTourGuideService
+tourguide/TestRewardsService.java
+ tourguide.TestRewardsService
