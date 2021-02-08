@@ -1,76 +1,61 @@
 package tourguide.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tourguide.helper.InternalTestHelper;
-import tourguide.tracker.Tracker;
+import tourguide.user.NearbyAttractions;
 import tourguide.user.User;
-import tourguide.user.UserReward;
+import tourguide.user.UserLocation;
+import tourguide.user.UserNearbyAttractions;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
 /**
  * Core Service of the application. <br>
- * It is used to track the user location, get trip deals and get nearby
- * locations. <br>
- * It is also used to setup internal testing.
+ * It is used to track the user's location, to get trip deals, to get nearby
+ * locations and to get the last location of a user. <br>
  */
 @Service
 public class TourGuideService {
 
-	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
+	private static final String TRIP_PRICER_API_KEY = "test-server-api-key";
 
 	private final GpsUtil gpsUtil;
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
-	public final Tracker tracker;
-	boolean testMode = true;
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
-
-		if (testMode) {
-			logger.info("TestMode enabled");
-			logger.debug("Initializing users");
-			initializeInternalUsers();
-			logger.debug("Finished initializing users");
-		}
-		tracker = new Tracker(this);
-		addShutDownHook();
 	}
 
-	public List<UserReward> getUserRewards(User user) {
-		return user.getUserRewards();
-	}
-
+	/**
+	 * Track or get the last visited location of the user set as parameter. <br>
+	 * 
+	 * @param user
+	 * @return user.getVisitedLocations().isEmpty() => true -> track the user ;
+	 *         false -> get the last visited location.
+	 */
 	public VisitedLocation getUserLocation(User user) {
 		return user.getVisitedLocations().isEmpty() ? trackUserLocation(user) : user.getLastVisitedLocation();
 	}
 
 	/**
-	 * Define a trip deals for the user. <br>
+	 * Define a trip deals for the user set as parameter. <br>
 	 * 
 	 * @param user
-	 * @return {@link Provider}
+	 * @return {@link Provider} from TripPricer.jar
 	 */
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().parallelStream().mapToInt(i -> i.getRewardPoints()).sum();
@@ -82,7 +67,7 @@ public class TourGuideService {
 	}
 
 	/**
-	 * Track the user location and add it to the user's visited locations. <br>
+	 * Track the user's location and add it to the user's visited location. <br>
 	 * 
 	 * @param {@link User}
 	 * @return {@link VisitedLocation}
@@ -90,12 +75,12 @@ public class TourGuideService {
 	public VisitedLocation trackUserLocation(User user) {
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-		// rewardsService.calculateRewards(user); What's for?
+//		calculateRewards(user); // What's for? -> the calculateRewards method is already defined in RewardsService
 		return visitedLocation;
 	}
 
 	/**
-	 * Get the list of the nearby attraction. <br>
+	 * Get the list of the nearby attractions. <br>
 	 * The nearby distance is defined with the attractionProximityRange field
 	 * variable of the {@link RewardsService} class. <br>
 	 * 
@@ -113,79 +98,86 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
-	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				tracker.stopTracking();
-			}
-		});
-	}
-
-	/**********************************************************************************
-	 * 
-	 * Methods Below: For Internal Testing
-	 * 
-	 **********************************************************************************/
-	private static final String TRIP_PRICER_API_KEY = "test-server-api-key";
-	// Database connection will be used for external users, but for testing purposes
-	// internal users are provided and stored in memory
-	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>(); // Was HashMap
-
-	private void initializeInternalUsers() {
-		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
-			String userName = "internalUser" + i;
-			String phone = "000";
-			String email = userName + "@tourGuide.com";
-			User user = new User(UUID.randomUUID(), userName, phone, email);
-			generateUserLocationHistory(user);
-
-			internalUserMap.put(userName, user);
-		});
-		logger.debug("Created {} internal test users.", InternalTestHelper.getInternalUserNumber());
-	}
-
-	private void generateUserLocationHistory(User user) {
-		IntStream.range(0, 3).forEach(i -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
-				new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime())));
-	}
-
-	private double generateRandomLongitude() {
-		double leftLimit = -180;
-		double rightLimit = 180;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
-	}
-
-	private double generateRandomLatitude() {
-		double leftLimit = -85.05112878;
-		double rightLimit = 85.05112878;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
-	}
-
-	private Date getRandomTime() {
-		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
-		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-	}
-
 	/**
-	 * getUser ; getAllUsers ; addUser ; are methods used for test purpose only.
-	 */
-	public User getUser(String userName) {
-		return internalUserMap.get(userName);
-	}
-
-	/**
-	 * Convert the internalUserMap into a list.
+	 * The distance between the user's location and the attraction's location. <br>
+	 * It sort the distance by making use of a TreeMap. <br>
 	 * 
-	 * @return a list containing all the users from the local map
+	 * @param user
+	 * @return Map<Double, String>, double = distance from the : String = name of
+	 *         the attraction
 	 */
-	public List<User> getAllUsers() {
-		return internalUserMap.values().parallelStream().collect(Collectors.toList());
-	}
+	public Map<Double, String> distanceBetweenUserAndAttraction(User user) {
+		Map<Double, String> attractionNameAndTheUserDistanceToIt = new TreeMap<>();
+		VisitedLocation userVisitedLocation = getUserLocation(user);
+		List<Attraction> nearbyAttractionsFromUser = getNearByAttractions(userVisitedLocation);
+		Location userLocation = userVisitedLocation.location;
 
-	public void addUser(User user) {
-		if (!internalUserMap.containsKey(user.getUserName())) {
-			internalUserMap.put(user.getUserName(), user);
+		for (int i = 0; i < nearbyAttractionsFromUser.size(); i++) {
+			Attraction attraction = nearbyAttractionsFromUser.get(i);
+			double distance = rewardsService.getDistance(userLocation, attraction);
+			attractionNameAndTheUserDistanceToIt.put(distance, attraction.attractionName);
 		}
+		return attractionNameAndTheUserDistanceToIt;
 	}
+
+	/**
+	 * Retrieve the 5 closest attraction's location from the user set as parameter.
+	 * 
+	 * @param user
+	 * @return {@link UserNearbyAttractions} with the five closest attractions from
+	 *         the user's location.
+	 */
+	public UserNearbyAttractions fiveClosestAttractions(User user) {
+		UserLocation userLocation = new UserLocation(user.getUserId(), user.getLastVisitedLocation().location);
+		Map<Double, String> distanceBetweenUserAndAttraction = distanceBetweenUserAndAttraction(user);
+		List<NearbyAttractions> fiveClosestAttractions = new ArrayList<>();
+
+		for (int i = 0; i < 5; i++) {
+			String attractionName = distanceBetweenUserAndAttraction.values().parallelStream()
+					.collect(Collectors.toList()).get(i);
+			Double distance = distanceBetweenUserAndAttraction.keySet().parallelStream().collect(Collectors.toList())
+					.get(i);
+
+			List<Attraction> listAttraction = gpsUtil.getAttractions();
+			Optional<Attraction> attraction = listAttraction.stream()
+					.filter(x -> x.attractionName.equals(attractionName))
+					.findFirst(); // That is done to retrieve the attraction's coordinates.
+
+			if (!attraction.isPresent()) {
+				throw new NullPointerException(
+						"The attraction is not present in the attractions's list." + listAttraction);
+			}
+
+			Location attractionLocation = new Location(attraction.get().latitude, attraction.get().longitude);
+			int pointsRewarded = rewardsService.getRewardPoints(attraction.get(), user);
+
+			NearbyAttractions userNearbyAttractions = new NearbyAttractions(attractionName, attractionLocation,
+					distance, pointsRewarded);
+			fiveClosestAttractions.add(userNearbyAttractions);
+
+		}
+		return new UserNearbyAttractions(fiveClosestAttractions, userLocation);
+	}
+
+	/**
+	 * Method used to retrieve all the current users's locations, it return a list
+	 * of type {@link UserLocation}. <br>
+	 * 
+	 * @param userList containing all the users.
+	 * @return a list of all the current locations of every users.
+	 */
+	public List<UserLocation> getAllCurrentLocations(List<User> userList) {
+		List<UserLocation> getAllCurrentLocations = new ArrayList<>();
+
+		for (int i = 0; i < userList.size(); i++) {
+			Location location = userList.get(i).getLastVisitedLocation().location;
+			UUID uuid = userList.get(i).getUserId();
+
+			UserLocation userLocation = new UserLocation(uuid, location);
+			getAllCurrentLocations.add(userLocation);
+		}
+
+		return getAllCurrentLocations;
+	}
+
 }

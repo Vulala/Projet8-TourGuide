@@ -1,6 +1,10 @@
+tourguide/TourGuideControllerTest.java
+ tourguide.TourGuideControllerTest
+tourguide/TestInternalTestHelper.java
+ tourguide.TestInternalTestHelper
 tourguide/TestPerformance.java
  tourguide.TestPerformance
-tourguide/TestTourGuideService.java
- tourguide.TestTourGuideService
+tourguide/TourGuideServiceIT.java
+ tourguide.TourGuideServiceIT
 tourguide/TestRewardsService.java
  tourguide.TestRewardsService

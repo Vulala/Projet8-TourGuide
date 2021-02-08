@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import gpsUtil.GpsUtil;
@@ -44,59 +46,70 @@ public class TestPerformance {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-//	@Disabled
+	/**
+	 * Change the Locale to match the Locale defined in the jar files. <br>
+	 * The use of the jar file: {@link GpsUtil} can throw a
+	 * <b>NumberFormatException</b> when used with a number format (locale)
+	 * different than EN/US type. <br>
+	 */
+	@BeforeAll
+	static void setupLocale() {
+		Locale.setDefault(Locale.ENGLISH);
+		Locale.setDefault(Locale.UK);
+	}
+
 	@Test
 	public void highVolumeTrackLocation() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		// Users should be incremented up to 100,000, and test finishes within 15
-		// minutes
-		InternalTestHelper.setInternalUserNumber(10);
+		InternalTestHelper.setInternalUserNumber(100);
+// Users should be incremented up to 100,000, and test finishes within 15 minutes
+		InternalTestHelper internalTestHelper = new InternalTestHelper();
+
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = internalTestHelper.getAllUsers();
 		List<VisitedLocation> listOfVisitedLocation = new ArrayList<VisitedLocation>();
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
-			VisitedLocation trackUserLocation = tourGuideService.trackUserLocation(user);
-			listOfVisitedLocation.add(trackUserLocation);
+			VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+			listOfVisitedLocation.add(visitedLocation);
 		}
 		stopWatch.stop();
-		tourGuideService.tracker.stopTracking();
+		internalTestHelper.tracker.stopTracking();
 
-		System.out.println("highVolumeTrackLocation: Time Elapsed: "
-				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
-		System.out.println("Visited Location For All Users: " + listOfVisitedLocation);
+		System.out.format("highVolumeTrackLocation: Time Elapsed: %d seconds.",
+				TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-//	@Disabled
 	@Test
 	public void highVolumeGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		// Users should be incremented up to 100,000, and test finishes within 20
-		// minutes
 		InternalTestHelper.setInternalUserNumber(10);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+// Users should be incremented up to 100,000, and test finishes within 20 minutes
+		InternalTestHelper internalTestHelper = new InternalTestHelper();
 
 		List<User> allUsers = new ArrayList<>();
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = internalTestHelper.getAllUsers();
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
+		// Should create a Date variable once and for all (for each !)
+		// Add VisitedLocations to each user as it is needed to calculate a reward.
 		allUsers.forEach(u -> rewardsService.calculateRewards(u));
 
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
 		stopWatch.stop();
-		tourGuideService.tracker.stopTracking();
+		internalTestHelper.tracker.stopTracking();
 
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");

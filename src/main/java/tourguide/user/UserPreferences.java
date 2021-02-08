@@ -16,7 +16,7 @@ public class UserPreferences {
 	private int numberOfAdults = 1;
 	private int numberOfChildren = 0;
 
-	public UserPreferences() {
+	protected UserPreferences() {
 	}
 
 	public void setAttractionProximity(int attractionProximity) {

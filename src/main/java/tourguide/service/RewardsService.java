@@ -23,10 +23,9 @@ public class RewardsService {
 
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
-	// proximity in miles
-	private int defaultProximityBuffer = 10;
+	private int defaultProximityBuffer = 10; // in miles
 	private int proximityBuffer = defaultProximityBuffer;
-	private int attractionProximityRange = Integer.MAX_VALUE; // was 200
+	private int attractionProximityRange = Integer.MAX_VALUE;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
 
@@ -49,7 +48,7 @@ public class RewardsService {
 
 	/**
 	 * calculateRewards is used to add an {@link UserReward} to the user who visited
-	 * a location.
+	 * a location. <br>
 	 * 
 	 * @param user
 	 */
@@ -73,7 +72,7 @@ public class RewardsService {
 	/**
 	 * isWithinAttractionProximity is used to know if the distance between the
 	 * attraction and the location of the user is smaller than the
-	 * attractionProximityRange which is a variable set at the class field.
+	 * attractionProximityRange which is a variable set at the class field. <br>
 	 * 
 	 * @param attraction
 	 * @param location
@@ -86,8 +85,8 @@ public class RewardsService {
 
 	/**
 	 * nearAttraction is used to know if the distance between the visited location
-	 * and the attraction is smaller than the proximity buffer; which is a variable
-	 * set at the class field.
+	 * and the attraction is smaller than the proximity buffer which is a variable
+	 * set at the class field. <br>
 	 * 
 	 * @param visitedLocation
 	 * @param attraction
@@ -104,9 +103,9 @@ public class RewardsService {
 	 * 
 	 * @param attraction : visited
 	 * @param user       : who have visited the attraction
-	 * @return int, the points rewarded
+	 * @return int : the points rewarded
 	 */
-	private int getRewardPoints(Attraction attraction, User user) {
+	public int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 

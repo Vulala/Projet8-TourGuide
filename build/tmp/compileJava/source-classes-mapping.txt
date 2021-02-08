@@ -1,21 +1,27 @@
-tourguide/helper/InternalTestHelper.java
- tourguide.helper.InternalTestHelper
-tourguide/Application.java
- tourguide.Application
-tourguide/user/UserPreferences.java
- tourguide.user.UserPreferences
 tourguide/user/UserReward.java
  tourguide.user.UserReward
-tourguide/user/User.java
- tourguide.user.User
+tourguide/user/UserPreferences.java
+ tourguide.user.UserPreferences
+tourguide/user/UserNearbyAttractions.java
+ tourguide.user.UserNearbyAttractions
 tourguide/tracker/Tracker.java
  tourguide.tracker.Tracker
+tourguide/user/User.java
+ tourguide.user.User
 tourguide/TourGuideController.java
  tourguide.TourGuideController
+tourguide/user/UserLocation.java
+ tourguide.user.UserLocation
+tourguide/user/NearbyAttractions.java
+ tourguide.user.NearbyAttractions
+tourguide/Application.java
+ tourguide.Application
 tourguide/service/RewardsService.java
  tourguide.service.RewardsService
 tourguide/TourGuideModule.java
  tourguide.TourGuideModule
 tourguide/service/TourGuideService.java
  tourguide.service.TourGuideService
- tourguide.service.TourGuideService$1
+tourguide/helper/InternalTestHelper.java
+ tourguide.helper.InternalTestHelper
+ tourguide.helper.InternalTestHelper$1
