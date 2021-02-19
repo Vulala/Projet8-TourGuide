@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -18,7 +22,7 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourguide.helper.InternalTestHelper;
 import tourguide.service.RewardsService;
-import tourguide.service.TourGuideService;
+import tourguide.tracker.Tracker;
 import tourguide.user.User;
 
 public class TestPerformance {
@@ -59,27 +63,19 @@ public class TestPerformance {
 	}
 
 	@Test
-	public void highVolumeTrackLocation() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+	public void highVolumeTrackLocation() throws InterruptedException, ExecutionException {
 		InternalTestHelper.setInternalUserNumber(100);
 // Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper internalTestHelper = new InternalTestHelper();
-
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
-		List<User> allUsers = new ArrayList<>();
-		allUsers = internalTestHelper.getAllUsers();
-		List<VisitedLocation> listOfVisitedLocation = new ArrayList<VisitedLocation>();
-
+		Tracker tracker = new Tracker();
+		ExecutorService executorService = Executors.newCachedThreadPool();
 		StopWatch stopWatch = new StopWatch();
+
 		stopWatch.start();
-		for (User user : allUsers) {
-			VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-			listOfVisitedLocation.add(visitedLocation);
-		}
+		Future<List<VisitedLocation>> result = executorService.submit(tracker);
+		List<VisitedLocation> listOfTrackedUsers = result.get();
+//		tracker.stopTracking(); // AfterEach?
+		System.out.println(listOfTrackedUsers);
 		stopWatch.stop();
-		internalTestHelper.tracker.stopTracking();
 
 		System.out.format("highVolumeTrackLocation: Time Elapsed: %d seconds.",
 				TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
@@ -90,26 +86,25 @@ public class TestPerformance {
 	public void highVolumeGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		InternalTestHelper.setInternalUserNumber(10);
+		InternalTestHelper.setInternalUserNumber(100);
 // Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper internalTestHelper = new InternalTestHelper();
 
+		InternalTestHelper internalTestHelper = new InternalTestHelper();
 		List<User> allUsers = new ArrayList<>();
 		allUsers = internalTestHelper.getAllUsers();
-
 		StopWatch stopWatch = new StopWatch();
+
 		stopWatch.start();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 		// Should create a Date variable once and for all (for each !)
 		// Add VisitedLocations to each user as it is needed to calculate a reward.
-		allUsers.forEach(u -> rewardsService.calculateRewards(u));
+		allUsers.parallelStream().forEach(rewardsService::calculateRewards);
 
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
 		stopWatch.stop();
-		internalTestHelper.tracker.stopTracking();
 
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tourguide.tracker.Tracker;
 import tourguide.user.User;
 
 /**
@@ -32,8 +31,7 @@ public class InternalTestHelper {
 
 	private Logger logger = LoggerFactory.getLogger(InternalTestHelper.class);
 
-	private static int internalUserNumber = 100000; // Set this default up to 100,000 for testing
-	public final Tracker tracker;
+	private static int internalUserNumber = 1000; // Set this default up to 100,000 for testing
 	private boolean testMode = true;
 
 	public InternalTestHelper() {
@@ -44,8 +42,8 @@ public class InternalTestHelper {
 			logger.debug("Finished initializing users.");
 		}
 
-		tracker = new Tracker(this);
-		addShutDownHook();
+		// tracker = new Tracker(this);
+		// addShutDownHook();
 	}
 
 	public static void setInternalUserNumber(int internalUserNumber) {
@@ -56,14 +54,14 @@ public class InternalTestHelper {
 		return internalUserNumber;
 	}
 
-	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				tracker.stopTracking();
-			}
-		});
-	}
+//	private void addShutDownHook() {
+//		Runtime.getRuntime().addShutdownHook(new Thread() {
+//			@Override
+//			public void run() {
+//				tracker.stopTracking();
+//			}
+//		});
+//	}
 
 	/**********************************************************************************
 	 * 

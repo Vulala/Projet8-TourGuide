@@ -1,8 +1,10 @@
 package tourguide.tracker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +14,11 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.VisitedLocation;
+import rewardCentral.RewardCentral;
 import tourguide.helper.InternalTestHelper;
+import tourguide.service.RewardsService;
 import tourguide.service.TourGuideService;
 import tourguide.user.User;
 
@@ -22,25 +28,23 @@ import tourguide.user.User;
  * {@link TourGuideService}. <br>
  *
  */
-public class Tracker extends Thread {
+public class Tracker implements Callable<List<VisitedLocation>> {
 
-	private static final long TRACKING_POLLING_INTERVAL = TimeUnit.MINUTES.toSeconds(5);
+	private static final long TRACKING_POLLING_INTERVAL = TimeUnit.MILLISECONDS.toMillis(1);
 
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 
 	private final ExecutorService executorService = Executors.newCachedThreadPool(); // Was newSingleThreadExecutor()
-	private TourGuideService tourGuideService;
-	private final InternalTestHelper internalTestHelper; // both were final
+
+	private GpsUtil gpsUtil = new GpsUtil();
+	private TourGuideService tourGuideService = new TourGuideService(gpsUtil,
+			new RewardsService(gpsUtil, new RewardCentral()));
+	private InternalTestHelper internalTestHelper = new InternalTestHelper(); // both were final
 	private boolean stop = false;
 
-//	public Tracker(TourGuideService tourGuideService) {
-//		this.tourGuideService = tourGuideService;
-//		this.executorService.submit(this);
-//	}
-
-	public Tracker(InternalTestHelper internalTestHelper) {
-		this.internalTestHelper = internalTestHelper;
-		this.executorService.submit(this);
+	public Tracker() {// InternalTestHelper internalTestHelper) {
+		// this.internalTestHelper = internalTestHelper;
+		// this.executorService.submit(this);
 	}
 
 	/**
@@ -62,6 +66,15 @@ public class Tracker extends Thread {
 		}
 	}
 
+//	private void addShutDownHook() {
+//		Runtime.getRuntime().addShutdownHook(new Thread() {
+//			@Override
+//			public void run() {
+//				this.stopTracking();
+//			}
+//		});
+//	}
+
 	/**
 	 * Build a map with the user's UUID as key and the user as value. <br>
 	 * 
@@ -72,14 +85,21 @@ public class Tracker extends Thread {
 		return listUser.stream().collect(Collectors.toMap(User::getUserId, user -> user));
 	}
 
+	public Tracker getTracker() {
+		return this;
+	}
+
 	/**
 	 * Run the tracker to track all the user. <br>
 	 * Here it track thoses set in the internalUserMap -> users for test purpose.
 	 * <br>
+	 * 
+	 * @return
 	 */
 	@Override
-	public void run() {
+	public List<VisitedLocation> call() {
 		StopWatch stopWatch = new StopWatch();
+		List<VisitedLocation> listOfVisitedLocation = new ArrayList<>();
 		while (true) {
 			if (Thread.currentThread().isInterrupted() || stop) {
 				logger.debug("The tracker is interrupted or have been asked to stop.");
@@ -89,7 +109,10 @@ public class Tracker extends Thread {
 			List<User> users = internalTestHelper.getAllUsers();
 			logger.debug("Begin Tracker; Tracking {} users...", users.size());
 			stopWatch.start();
-			users.forEach(tourGuideService::trackUserLocation);
+			users.parallelStream().forEach(tourGuideService::trackUserLocation);
+//			for (User user : users) {
+//				listOfVisitedLocation.add(tourGuideService.trackUserLocation(user));
+//			}
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed in seconds: {} .", TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 			stopWatch.reset();
@@ -97,10 +120,14 @@ public class Tracker extends Thread {
 			try {
 				logger.debug("The tracker is now sleeping for {} seconds.", TRACKING_POLLING_INTERVAL);
 				TimeUnit.SECONDS.sleep(TRACKING_POLLING_INTERVAL);
+				this.stopTracking(); // That because cannot/don't work to send interrupt order from the class were
+										// the call() have been called.
 			} catch (InterruptedException e) {
 				logger.debug("The thread have been interrupted.");
 				Thread.currentThread().interrupt(); // Restore interrupted state...
 			}
 		}
+		return listOfVisitedLocation;
 	}
+
 }
