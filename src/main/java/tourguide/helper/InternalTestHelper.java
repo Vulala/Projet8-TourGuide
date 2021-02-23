@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourguide.user.User;
@@ -30,21 +32,7 @@ import tourguide.user.User;
 public class InternalTestHelper {
 
 	private Logger logger = LoggerFactory.getLogger(InternalTestHelper.class);
-
 	private static int internalUserNumber = 1000; // Set this default up to 100,000 for testing
-	private boolean testMode = true;
-
-	public InternalTestHelper() {
-		if (testMode) {
-			logger.info("TestMode enabled.");
-			logger.debug("Initializing users...");
-			initializeInternalUsers();
-			logger.debug("Finished initializing users.");
-		}
-
-		// tracker = new Tracker(this);
-		// addShutDownHook();
-	}
 
 	public static void setInternalUserNumber(int internalUserNumber) {
 		InternalTestHelper.internalUserNumber = internalUserNumber;
@@ -86,8 +74,9 @@ public class InternalTestHelper {
 	}
 
 	private void generateUserLocationHistory(User user) {
-		IntStream.range(0, 3).forEach(i -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
-				new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime())));
+		Attraction attraction = new GpsUtil().getAttractions().get(0);
+		IntStream.range(0, 1).forEach(
+				i -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date())));
 	}
 
 	private double generateRandomLongitude() {
@@ -136,4 +125,10 @@ public class InternalTestHelper {
 		}
 	}
 
+	/**
+	 * Initialize users to be used internally for test purpose. <br>
+	 */
+	public void initializeTheInternalUsers() {
+		initializeInternalUsers();
+	}
 }

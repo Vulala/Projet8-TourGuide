@@ -2,14 +2,7 @@ package tourguide;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -17,13 +10,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
 import tourguide.helper.InternalTestHelper;
-import tourguide.service.RewardsService;
-import tourguide.tracker.Tracker;
-import tourguide.user.User;
+import tourguide.tracker.TrackUserService;
 
 public class TestPerformance {
 
@@ -63,18 +51,15 @@ public class TestPerformance {
 	}
 
 	@Test
-	public void highVolumeTrackLocation() throws InterruptedException, ExecutionException {
-		InternalTestHelper.setInternalUserNumber(100);
+	public void highVolumeTrackLocation() {
+		InternalTestHelper.setInternalUserNumber(66);
 // Users should be incremented up to 100,000, and test finishes within 15 minutes
-		Tracker tracker = new Tracker();
-		ExecutorService executorService = Executors.newCachedThreadPool();
+// The current amount of threads used is 15, so the total user tracked will be the previous value x 15.		
+		TrackUserService trackUserService = new TrackUserService();
 		StopWatch stopWatch = new StopWatch();
 
 		stopWatch.start();
-		Future<List<VisitedLocation>> result = executorService.submit(tracker);
-		List<VisitedLocation> listOfTrackedUsers = result.get();
-//		tracker.stopTracking(); // AfterEach?
-		System.out.println(listOfTrackedUsers);
+		trackUserService.trackUsersLocationsThreadPool();
 		stopWatch.stop();
 
 		System.out.format("highVolumeTrackLocation: Time Elapsed: %d seconds.",
@@ -84,30 +69,18 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(66);
 // Users should be incremented up to 100,000, and test finishes within 20 minutes
-
-		InternalTestHelper internalTestHelper = new InternalTestHelper();
-		List<User> allUsers = new ArrayList<>();
-		allUsers = internalTestHelper.getAllUsers();
+// The current amount of threads used is 15, so the total user tracked will be the previous value x 15.	
+		TrackUserService trackUserService = new TrackUserService();
 		StopWatch stopWatch = new StopWatch();
 
 		stopWatch.start();
-		Attraction attraction = gpsUtil.getAttractions().get(0);
-		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-		// Should create a Date variable once and for all (for each !)
-		// Add VisitedLocations to each user as it is needed to calculate a reward.
-		allUsers.parallelStream().forEach(rewardsService::calculateRewards);
-
-		for (User user : allUsers) {
-			assertTrue(user.getUserRewards().size() > 0);
-		}
+		trackUserService.calculateUsersRewardsThreadPool();
 		stopWatch.stop();
 
-		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
-				+ " seconds.");
+		System.out.format("highVolumeGetRewards: Time Elapsed: %d seconds.",
+				TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
