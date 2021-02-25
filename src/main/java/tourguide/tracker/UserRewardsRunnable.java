@@ -23,14 +23,6 @@ public class UserRewardsRunnable implements Runnable {
 
 	private RewardsService rewardsService = new RewardsService(new GpsUtil(), new RewardCentral());
 	private InternalTestHelper internalTestHelper = new InternalTestHelper();
-	private boolean stop = false;
-
-	/**
-	 * Assures to shutdown the UserRewardsRunnable thread. <br>
-	 */
-	public void stopThread() {
-		stop = true;
-	}
 
 	/**
 	 * Run the thread to calculate the rewards for every users. <br>
@@ -39,21 +31,11 @@ public class UserRewardsRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while (true) {
-			if (Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("The UserRewardsRunnable is interrupted or have been asked to stop.");
-				Thread.currentThread().interrupt();
-				break;
-			}
-
-			internalTestHelper.initializeTheInternalUsers();
-			List<User> users = internalTestHelper.getAllUsers();
-			logger.debug("Begin calculating the rewards; Calculating {} rewards...", users.size());
-			for (User user : users) {
-				rewardsService.calculateRewards(user);
-			}
-//			users.parallelStream().forEach(rewardsService::calculateRewards);
-			this.stopThread();
+		internalTestHelper.initializeTheInternalUsers();
+		List<User> users = internalTestHelper.getAllUsers();
+		logger.debug("Begin calculating the rewards; Calculating {} rewards...", users.size());
+		for (User user : users) {
+			rewardsService.calculateRewards(user);
 		}
 	}
 

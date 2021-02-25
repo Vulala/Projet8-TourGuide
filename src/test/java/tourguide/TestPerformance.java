@@ -52,9 +52,9 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeTrackLocation() {
-		InternalTestHelper.setInternalUserNumber(66);
+		InternalTestHelper.setInternalUserNumber(666);
 // Users should be incremented up to 100,000, and test finishes within 15 minutes
-// The current amount of threads used is 15, so the total user tracked will be the previous value x 15.		
+// Note that the current amount of threads actually used here is 15, so the total user tracked will be the previous value x 15.		
 		TrackUserService trackUserService = new TrackUserService();
 		StopWatch stopWatch = new StopWatch();
 
@@ -69,9 +69,9 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeGetRewards() {
-		InternalTestHelper.setInternalUserNumber(66);
+		InternalTestHelper.setInternalUserNumber(334);
 // Users should be incremented up to 100,000, and test finishes within 20 minutes
-// The current amount of threads used is 15, so the total user tracked will be the previous value x 15.	
+// Note that the current amount of threads actually used here is 30, so the total rewards calculated will be the previous value x 30.	
 		TrackUserService trackUserService = new TrackUserService();
 		StopWatch stopWatch = new StopWatch();
 

@@ -38,11 +38,16 @@ public class TrackUserService {
 
 		try {
 			executorService4.submit(tracker).get();
-			TimeUnit.SECONDS.sleep(1); // convenient time to wait for everything to proceed correctly
+//			TimeUnit.SECONDS.sleep(1); // convenient time to wait for everything to proceed correctly
 		} catch (InterruptedException | ExecutionException e) {
-			logger.debug("The thread have been interrupted or the time waited is not long enough.");
+			logger.debug("The get() method of the Future class have been interrupted or the result is not available.");
 			Thread.currentThread().interrupt();
 		}
+
+		stopExecutorService(executorService);
+		stopExecutorService(executorService2);
+		stopExecutorService(executorService3);
+		stopExecutorService(executorService4);
 		logger.debug("The users have been successfully tracked.");
 	}
 
@@ -52,24 +57,64 @@ public class TrackUserService {
 		executorService.submit(userRewardsRunnable);
 		executorService.submit(userRewardsRunnable);
 		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
+		executorService.submit(userRewardsRunnable);
 		executorService2.submit(userRewardsRunnable);
 		executorService2.submit(userRewardsRunnable);
 		executorService2.submit(userRewardsRunnable);
 		executorService2.submit(userRewardsRunnable);
-		executorService3.submit(userRewardsRunnable);
-		executorService3.submit(userRewardsRunnable);
-		executorService3.submit(userRewardsRunnable);
-		executorService3.submit(userRewardsRunnable);
-		executorService4.submit(userRewardsRunnable);
-		executorService4.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
+		executorService2.submit(userRewardsRunnable);
 
 		try {
-			executorService4.submit(userRewardsRunnable).get();
-			TimeUnit.SECONDS.sleep(1); // convenient time to wait for everything to proceed correctly
+			executorService2.submit(userRewardsRunnable).get();
+//			TimeUnit.SECONDS.sleep(1); // convenient time to wait for everything to proceed correctly
 		} catch (InterruptedException | ExecutionException e) {
-			logger.debug("The thread have been interrupted or the time waited is not long enough.");
+			logger.debug("The get() method of the Future class have been interrupted or the result is not available.");
 			Thread.currentThread().interrupt();
 		}
+
+		stopExecutorService(executorService);
+		stopExecutorService(executorService2);
 		logger.debug("The users have their rewards been successfully calculated.");
+	}
+
+	/**
+	 * Assures to shutdown the ThreadPool. <br>
+	 * It firstly use the shutdown() method and then proceed with the shutdownNow()
+	 * if the time waited for the completion have been reached. <br>
+	 * 
+	 * @param executorService : the executorService to shutdown.
+	 */
+	public void stopExecutorService(ExecutorService executorService) {
+		executorService.shutdown();
+
+		try {
+			if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+				logger.debug("The await termination time is overdue.");
+				executorService.shutdownNow();
+			}
+		} catch (InterruptedException interruptedException) {
+			logger.debug("The thread have been interrupted during the await termination time.");
+			executorService.shutdownNow();
+			Thread.currentThread().interrupt();
+		}
 	}
 }
