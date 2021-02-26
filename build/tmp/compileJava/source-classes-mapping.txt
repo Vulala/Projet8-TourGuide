@@ -1,21 +1,23 @@
-tourguide/user/UserReward.java
- tourguide.user.UserReward
+tourguide/Application.java
+ tourguide.Application
 tourguide/user/UserPreferences.java
  tourguide.user.UserPreferences
 tourguide/user/UserNearbyAttractions.java
  tourguide.user.UserNearbyAttractions
-tourguide/tracker/Tracker.java
- tourguide.tracker.Tracker
+tourguide/user/NearbyAttractions.java
+ tourguide.user.NearbyAttractions
+tourguide/user/UserLocation.java
+ tourguide.user.UserLocation
+tourguide/thread/Tracker.java
+ tourguide.thread.Tracker
 tourguide/user/User.java
  tourguide.user.User
 tourguide/TourGuideController.java
  tourguide.TourGuideController
-tourguide/user/UserLocation.java
- tourguide.user.UserLocation
-tourguide/user/NearbyAttractions.java
- tourguide.user.NearbyAttractions
-tourguide/Application.java
- tourguide.Application
+tourguide/thread/service/ThreadUserService.java
+ tourguide.thread.service.ThreadUserService
+tourguide/user/UserReward.java
+ tourguide.user.UserReward
 tourguide/service/RewardsService.java
  tourguide.service.RewardsService
 tourguide/TourGuideModule.java
@@ -24,4 +26,5 @@ tourguide/service/TourGuideService.java
  tourguide.service.TourGuideService
 tourguide/helper/InternalTestHelper.java
  tourguide.helper.InternalTestHelper
- tourguide.helper.InternalTestHelper$1
+tourguide/thread/UserRewardsRunnable.java
+ tourguide.thread.UserRewardsRunnable

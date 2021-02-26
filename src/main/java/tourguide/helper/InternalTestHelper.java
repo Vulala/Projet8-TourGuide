@@ -3,11 +3,11 @@ package tourguide.helper;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -15,24 +15,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourguide.user.User;
 
 /**
  * Class used to set internal test. <br>
- * It permit to define the number of user to create for the tests. <br>
+ * It define the number of user to create for the tests. <br>
  * The internalUserNumber variable is directly set in each tests. <br>
- * It also give methods to retrieve values from the internal map replacing a DB.
- * <br>
+ * It also give methods to retrieve values from the internal map. <br>
  */
 @Service
 public class InternalTestHelper {
 
 	private Logger logger = LoggerFactory.getLogger(InternalTestHelper.class);
-	private static int internalUserNumber = 1000; // Set this default up to 100,000 for testing
+	private static int internalUserNumber = 100;
 
 	public static void setInternalUserNumber(int internalUserNumber) {
 		InternalTestHelper.internalUserNumber = internalUserNumber;
@@ -42,23 +39,12 @@ public class InternalTestHelper {
 		return internalUserNumber;
 	}
 
-//	private void addShutDownHook() {
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//			@Override
-//			public void run() {
-//				tracker.stopTracking();
-//			}
-//		});
-//	}
+	/**
+	 * Database connection will be used for external users, but for testing purposes
+	 * internal users are provided and stored in memory. <br>
+	 */
 
-	/**********************************************************************************
-	 * 
-	 * Methods Below: For Internal Testing
-	 * 
-	 **********************************************************************************/
-	// Database connection will be used for external users, but for testing purposes
-	// internal users are provided and stored in memory
-	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>(); // Was HashMap
+	private final Map<String, User> internalUserMap = new HashMap<>();
 
 	private void initializeInternalUsers() {
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
@@ -74,9 +60,8 @@ public class InternalTestHelper {
 	}
 
 	private void generateUserLocationHistory(User user) {
-		Attraction attraction = new GpsUtil().getAttractions().get(0);
-		IntStream.range(0, 1).forEach(
-				i -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date())));
+		IntStream.range(0, 1).forEach(i -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
+				new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime())));
 	}
 
 	private double generateRandomLongitude() {

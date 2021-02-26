@@ -45,7 +45,6 @@ public class TestRewardsService {
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 
-//	@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");

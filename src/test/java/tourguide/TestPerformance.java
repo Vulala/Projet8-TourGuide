@@ -7,11 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import gpsUtil.GpsUtil;
 import tourguide.helper.InternalTestHelper;
-import tourguide.tracker.TrackUserService;
+import tourguide.thread.service.ThreadUserService;
 
 public class TestPerformance {
 
@@ -50,16 +51,22 @@ public class TestPerformance {
 		Locale.setDefault(Locale.UK);
 	}
 
+	@DisplayName("Track the user to get his location for an high volume of users.")
 	@Test
 	public void highVolumeTrackLocation() {
-		InternalTestHelper.setInternalUserNumber(666);
-// Users should be incremented up to 100,000, and test finishes within 15 minutes
-// Note that the current amount of threads actually used here is 15, so the total user tracked will be the previous value x 15.		
-		TrackUserService trackUserService = new TrackUserService();
+		ThreadUserService threadUserService = new ThreadUserService();
 		StopWatch stopWatch = new StopWatch();
 
+		InternalTestHelper.setInternalUserNumber(10);
+// Users should be incremented up to 100,000, and test finishes within 15 minutes
+// Note : the amount of users tracked depends of the number of users set and the amount of threads used.
+		threadUserService.setThreadAmount(1000);
+
+		System.out.format("Number of user's locations to track : %d \n",
+				threadUserService.getThreadAmount() * InternalTestHelper.getInternalUserNumber());
+
 		stopWatch.start();
-		trackUserService.trackUsersLocationsThreadPool();
+		threadUserService.trackUsersLocationsThreadPool();
 		stopWatch.stop();
 
 		System.out.format("highVolumeTrackLocation: Time Elapsed: %d seconds.",
@@ -67,16 +74,22 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
+	@DisplayName("Calculate the reward for an high volume of users.")
 	@Test
 	public void highVolumeGetRewards() {
-		InternalTestHelper.setInternalUserNumber(334);
-// Users should be incremented up to 100,000, and test finishes within 20 minutes
-// Note that the current amount of threads actually used here is 30, so the total rewards calculated will be the previous value x 30.	
-		TrackUserService trackUserService = new TrackUserService();
+		ThreadUserService threadUserService = new ThreadUserService();
 		StopWatch stopWatch = new StopWatch();
 
+		InternalTestHelper.setInternalUserNumber(10);
+// Users should be incremented up to 100,000, and test finishes within 20 minutes
+// Note : the amount of rewards calculated depends of the number of users set and the amount of threads used.
+		threadUserService.setThreadAmount(1000);
+
+		System.out.format("Number of user's rewards to calculate : %d \n",
+				threadUserService.getThreadAmount() * InternalTestHelper.getInternalUserNumber());
+
 		stopWatch.start();
-		trackUserService.calculateUsersRewardsThreadPool();
+		threadUserService.calculateUsersRewardsThreadPool();
 		stopWatch.stop();
 
 		System.out.format("highVolumeGetRewards: Time Elapsed: %d seconds.",

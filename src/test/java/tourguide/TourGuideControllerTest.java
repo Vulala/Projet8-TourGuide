@@ -91,8 +91,8 @@ class TourGuideControllerTest {
 		// ARRANGE
 		when(internalTestHelper.getUser(any(String.class)))
 				.thenReturn(new User(UUID.randomUUID(), "userName", "phoneNumber", "emailAddress"));
-		when(tourGuideService.fiveClosestAttractions(any(User.class)))
-				.thenReturn(new UserNearbyAttractions(new ArrayList<>(), any(UserLocation.class)));
+		when(tourGuideService.fiveClosestAttractions(any(User.class))).thenReturn(
+				new UserNearbyAttractions(new ArrayList<>(), new UserLocation(UUID.randomUUID(), new Location(0, 0))));
 
 		// ACT
 		MvcResult mvcResult = this.mockMvc.perform(get("/getNearbyAttractions?userName=userName")).andDo(print())
@@ -105,7 +105,7 @@ class TourGuideControllerTest {
 		verify(tourGuideService, times(1)).fiveClosestAttractions(any(User.class));
 	}
 
-	@Disabled("JsonException: java.lang.reflect.InvocationTargetException ")
+	@Disabled("NullPointerException: because the internal user don't have a precalculated reward.")
 	@DisplayName("GET : /getRewards")
 	@Test
 	void givenGettingTheRewardsOfTheUser_whenGetRewards_thenItDisplayTheRewardsOfTheUserAsJSON() throws Exception {
@@ -115,11 +115,11 @@ class TourGuideControllerTest {
 				new Attraction("attractionName", "city", "state", 0.0, 0.0));
 		User user = new User(UUID.randomUUID(), "userName", "phoneNumber", "emailAddress");
 		user.addUserReward(userReward);
-
-		List<UserReward> listOfTheUsersRewards = new ArrayList<UserReward>();
-		listOfTheUsersRewards.add(userReward);
 		internalTestHelper.addUser(user);
-		when(internalTestHelper.getUser(any(String.class))).thenReturn(user);
+
+		List<UserReward> listOfTheUsersRewards = new ArrayList<>();
+		listOfTheUsersRewards.add(userReward);
+		when(internalTestHelper.getUser("userName").getUserRewards()).thenReturn(listOfTheUsersRewards);
 
 		// ACT
 		MvcResult mvcResult = this.mockMvc.perform(get("/getRewards?userName=userName")).andDo(print()).andReturn();

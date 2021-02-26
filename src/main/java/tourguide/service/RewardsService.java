@@ -59,7 +59,7 @@ public class RewardsService {
 		for (VisitedLocation visitedLocation : userLocations) {
 			for (Attraction attraction : attractions) {
 				if (user.getUserRewards().parallelStream()
-						.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0
+						.filter(r -> r.getAttraction().attractionName.equals(attraction.attractionName)).count() == 0
 						&& nearAttraction(visitedLocation, attraction)) {
 					// why does it need to know if the user is close to an attraction?
 					user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
