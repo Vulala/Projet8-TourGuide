@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
 import tourguide.helper.InternalTestHelper;
+import tourguide.service.AttractionUtility;
 import tourguide.service.RewardsService;
 import tourguide.user.User;
 
@@ -21,7 +22,8 @@ public class UserRewardsRunnable implements Runnable {
 
 	private Logger logger = LoggerFactory.getLogger(UserRewardsRunnable.class);
 
-	private RewardsService rewardsService = new RewardsService(new GpsUtil(), new RewardCentral());
+	private RewardsService rewardsService = new RewardsService(new GpsUtil(),
+			new AttractionUtility(new RewardCentral()));
 	private InternalTestHelper internalTestHelper = new InternalTestHelper();
 
 	/**

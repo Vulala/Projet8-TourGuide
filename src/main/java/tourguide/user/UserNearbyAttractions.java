@@ -8,11 +8,14 @@ import java.util.List;
 public class UserNearbyAttractions {
 
 	private List<NearbyAttractions> nearbyAttractions;
-	private UserLocation userLocation;
+	private UserCoordinates userCoordinates;
 
-	public UserNearbyAttractions(List<NearbyAttractions> nearbyAttractions, UserLocation userLocation) {
+	public UserNearbyAttractions() {
+	}
+
+	public UserNearbyAttractions(List<NearbyAttractions> nearbyAttractions, UserCoordinates userCoordinates) {
 		this.nearbyAttractions = nearbyAttractions;
-		this.userLocation = userLocation;
+		this.userCoordinates = userCoordinates;
 	}
 
 	public List<NearbyAttractions> getNearbyAttractions() {
@@ -23,12 +26,18 @@ public class UserNearbyAttractions {
 		this.nearbyAttractions = nearbyAttractions;
 	}
 
-	public UserLocation getUserLocation() {
-		return userLocation;
+	public UserCoordinates getUserCoordinates() {
+		return userCoordinates;
 	}
 
-	public void setUserLocation(UserLocation userLocation) {
-		this.userLocation = userLocation;
+	public void setUserCoordinates(UserCoordinates userCoordinates) {
+		this.userCoordinates = userCoordinates;
+	}
+
+	@Override
+	public String toString() {
+		return "UserNearbyAttractions [nearbyAttractions=" + nearbyAttractions + ", userCoordinates=" + userCoordinates
+				+ "]";
 	}
 
 }

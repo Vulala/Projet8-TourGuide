@@ -18,16 +18,16 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
-import tourguide.service.RewardsService;
-import tourguide.service.TourGuideService;
+import tourguide.service.AttractionUtility;
+import tourguide.service.LocationService;
 import tourguide.user.User;
 import tripPricer.Provider;
 
-public class TourGuideServiceIT {
+public class LocationServiceIT {
 
 	private GpsUtil gpsUtil = new GpsUtil();
-	private RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-	private TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+	private AttractionUtility attractionUtilitary = new AttractionUtility(new RewardCentral());
+	private LocationService tourGuideService = new LocationService(gpsUtil, attractionUtilitary);
 	private User user = new User(UUID.randomUUID(), "jon1", "000", "jon1@tourGuide.com");
 
 	/**
@@ -45,8 +45,8 @@ public class TourGuideServiceIT {
 	@BeforeEach
 	void setup() {
 		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+		attractionUtilitary = new AttractionUtility(new RewardCentral());
+		tourGuideService = new LocationService(gpsUtil, attractionUtilitary);
 	}
 // Not a UT, should create an attraction instead or mock it, same for gpsUtil
 

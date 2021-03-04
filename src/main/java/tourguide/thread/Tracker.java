@@ -11,14 +11,14 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourguide.helper.InternalTestHelper;
-import tourguide.service.RewardsService;
-import tourguide.service.TourGuideService;
+import tourguide.service.AttractionUtility;
+import tourguide.service.LocationService;
 import tourguide.user.User;
 
 /**
  * Implements {@link Callable} and is used to create a thread that will then
  * track the user's location by using the trackUserLocation method from
- * {@link TourGuideService}. <br>
+ * {@link LocationService}. <br>
  *
  */
 public class Tracker implements Callable<List<VisitedLocation>> {
@@ -26,8 +26,8 @@ public class Tracker implements Callable<List<VisitedLocation>> {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 
 	private GpsUtil gpsUtil = new GpsUtil();
-	private TourGuideService tourGuideService = new TourGuideService(gpsUtil,
-			new RewardsService(gpsUtil, new RewardCentral()));
+	private LocationService tourGuideService = new LocationService(gpsUtil,
+			new AttractionUtility(new RewardCentral()));
 	private InternalTestHelper internalTestHelper = new InternalTestHelper();
 
 	/**

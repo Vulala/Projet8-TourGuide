@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourguide.user.Coordinates;
 import tourguide.user.NearbyAttractions;
 import tourguide.user.User;
-import tourguide.user.UserLocation;
+import tourguide.user.UserCoordinates;
 import tourguide.user.UserNearbyAttractions;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -27,17 +27,17 @@ import tripPricer.TripPricer;
  * locations and to get the last location of a user. <br>
  */
 @Service
-public class TourGuideService {
+public class LocationService {
 
 	private static final String TRIP_PRICER_API_KEY = "test-server-api-key";
 
 	private final GpsUtil gpsUtil;
-	private final RewardsService rewardsService;
+	private final AttractionUtility attractionUtilitary;
 	private final TripPricer tripPricer = new TripPricer();
 
-	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
+	public LocationService(GpsUtil gpsUtil, AttractionUtility attractionUtilitary) {
 		this.gpsUtil = gpsUtil;
-		this.rewardsService = rewardsService;
+		this.attractionUtilitary = attractionUtilitary;
 	}
 
 	/**
@@ -75,7 +75,6 @@ public class TourGuideService {
 	public VisitedLocation trackUserLocation(User user) {
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-//		calculateRewards(user); // What's for? -> the calculateRewards method is already defined in RewardsService
 		return visitedLocation;
 	}
 
@@ -90,7 +89,7 @@ public class TourGuideService {
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		for (Attraction attraction : gpsUtil.getAttractions()) {
-			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
+			if (attractionUtilitary.isWithinAttractionProximity(attraction, visitedLocation.location)) {
 				nearbyAttractions.add(attraction);
 			}
 		}
@@ -110,13 +109,17 @@ public class TourGuideService {
 		Map<Double, String> attractionNameAndTheUserDistanceToIt = new TreeMap<>();
 		VisitedLocation userVisitedLocation = getUserLocation(user);
 		List<Attraction> nearbyAttractionsFromUser = getNearByAttractions(userVisitedLocation);
-		Location userLocation = userVisitedLocation.location;
+		Coordinates userCoordinates = new Coordinates(userVisitedLocation.location.longitude,
+				userVisitedLocation.location.latitude);
 
 		for (int i = 0; i < nearbyAttractionsFromUser.size(); i++) {
 			Attraction attraction = nearbyAttractionsFromUser.get(i);
-			double distance = rewardsService.getDistance(userLocation, attraction);
-			attractionNameAndTheUserDistanceToIt.put(distance, attraction.attractionName);
+			Coordinates attractionCoordinates = new Coordinates(attraction.longitude, attraction.latitude);
+
+			double distance2 = attractionUtilitary.getDistanceCoordinates(userCoordinates, attractionCoordinates);
+			attractionNameAndTheUserDistanceToIt.put(distance2, attraction.attractionName);
 		}
+
 		return attractionNameAndTheUserDistanceToIt;
 	}
 
@@ -128,7 +131,8 @@ public class TourGuideService {
 	 *         the user's location.
 	 */
 	public UserNearbyAttractions fiveClosestAttractions(User user) {
-		UserLocation userLocation = new UserLocation(user.getUserId(), user.getLastVisitedLocation().location);
+		UserCoordinates userCoordinates = new UserCoordinates(user.getUserId(), new Coordinates(
+				user.getLastVisitedLocation().location.longitude, user.getLastVisitedLocation().location.latitude));
 		Map<Double, String> distanceBetweenUserAndAttraction = distanceBetweenUserAndAttraction(user);
 		List<NearbyAttractions> fiveClosestAttractions = new ArrayList<>();
 
@@ -140,40 +144,40 @@ public class TourGuideService {
 
 			List<Attraction> listAttraction = gpsUtil.getAttractions();
 			Optional<Attraction> attraction = listAttraction.stream()
-					.filter(x -> x.attractionName.equals(attractionName))
-					.findFirst(); // That is done to retrieve the attraction's coordinates.
+					.filter(x -> x.attractionName.equals(attractionName)).findFirst();
+			// This is done to retrieve the attraction's coordinates.
 
 			if (!attraction.isPresent()) {
 				throw new NullPointerException(
 						"The attraction is not present in the attractions's list." + listAttraction);
 			}
 
-			Location attractionLocation = new Location(attraction.get().latitude, attraction.get().longitude);
-			int pointsRewarded = rewardsService.getRewardPoints(attraction.get(), user);
+			Coordinates attractionCoordinates = new Coordinates(attraction.get().longitude, attraction.get().latitude);
+			int pointsRewarded = attractionUtilitary.getRewardPoints(attraction.get(), user);
 
-			NearbyAttractions userNearbyAttractions = new NearbyAttractions(attractionName, attractionLocation,
+			NearbyAttractions userNearbyAttractions = new NearbyAttractions(attractionName, attractionCoordinates,
 					distance, pointsRewarded);
 			fiveClosestAttractions.add(userNearbyAttractions);
 
 		}
-		return new UserNearbyAttractions(fiveClosestAttractions, userLocation);
+		return new UserNearbyAttractions(fiveClosestAttractions, userCoordinates);
 	}
 
 	/**
 	 * Method used to retrieve all the current users's locations, it return a list
-	 * of type {@link UserLocation}. <br>
+	 * of type {@link UserCoordinates}. <br>
 	 * 
 	 * @param userList containing all the users.
 	 * @return a list of all the current locations of every users.
 	 */
-	public List<UserLocation> getAllCurrentLocations(List<User> userList) {
-		List<UserLocation> getAllCurrentLocations = new ArrayList<>();
+	public List<UserCoordinates> getAllCurrentLocations(List<User> userList) {
+		List<UserCoordinates> getAllCurrentLocations = new ArrayList<>();
 
 		for (int i = 0; i < userList.size(); i++) {
-			Location location = userList.get(i).getLastVisitedLocation().location;
+			Coordinates coordinates = new Coordinates(userList.get(i).getLastVisitedLocation().location.longitude,
+					userList.get(i).getLastVisitedLocation().location.latitude);
 			UUID uuid = userList.get(i).getUserId();
-
-			UserLocation userLocation = new UserLocation(uuid, location);
+			UserCoordinates userLocation = new UserCoordinates(uuid, coordinates);
 			getAllCurrentLocations.add(userLocation);
 		}
 

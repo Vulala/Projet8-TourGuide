@@ -1,21 +1,23 @@
 package tourguide.user;
 
-import gpsUtil.location.Location;
-
 /**
- * Entity used to set the nearby attractions with the requested data. <br>
+ * Entity used to set the nearby attractions with the requested data (fields).
+ * <br>
  */
 public class NearbyAttractions {
 
 	private String attractionName;
-	private Location attractionLocation;
+	private Coordinates coordinates;
 	private Double distanceFromTheAttraction;
 	private int pointsRewarded;
 
-	public NearbyAttractions(String attractionName, Location attractionLocation, Double distanceFromTheAttraction,
+	public NearbyAttractions() {
+	}
+
+	public NearbyAttractions(String attractionName, Coordinates coordinates, Double distanceFromTheAttraction,
 			int pointsRewarded) {
 		this.attractionName = attractionName;
-		this.attractionLocation = attractionLocation;
+		this.coordinates = coordinates;
 		this.distanceFromTheAttraction = distanceFromTheAttraction;
 		this.pointsRewarded = pointsRewarded;
 	}
@@ -28,12 +30,12 @@ public class NearbyAttractions {
 		this.attractionName = attractionName;
 	}
 
-	public Location getAttractionLocation() {
-		return attractionLocation;
+	public Coordinates getCoordinates() {
+		return coordinates;
 	}
 
-	public void setAttractionLocation(Location attractionLocation) {
-		this.attractionLocation = attractionLocation;
+	public void setCoordinates(Coordinates coordinates) {
+		this.coordinates = coordinates;
 	}
 
 	public Double getDistanceFromTheAttraction() {
@@ -50,6 +52,13 @@ public class NearbyAttractions {
 
 	public void setPointsRewarded(int pointsRewarded) {
 		this.pointsRewarded = pointsRewarded;
+	}
+
+	@Override
+	public String toString() {
+		return "NearbyAttractions [attractionName=" + attractionName + ", coordinates=" + coordinates
+				+ ", distanceFromTheAttraction=" + distanceFromTheAttraction + ", pointsRewarded=" + pointsRewarded
+				+ "]";
 	}
 
 }

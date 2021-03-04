@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,35 +13,24 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
-import tourguide.service.RewardsService;
+import tourguide.service.AttractionUtility;
 import tourguide.user.User;
-import tourguide.user.UserReward;
 
-public class TestRewardsService {
+public class AttractionUtilityTest {
 
 	private GpsUtil gpsUtil = new GpsUtil();
-	private RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+	private AttractionUtility attractionUtilitary = new AttractionUtility(new RewardCentral());
 	private Attraction attraction = gpsUtil.getAttractions().get(0);
 
 	@BeforeEach
 	void setup() {
 		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-	}
-
-	@Test
-	public void userGetRewards() {
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
-
-		rewardsService.calculateRewards(user);
-		List<UserReward> userRewards = user.getUserRewards();
-		assertEquals(userRewards.size(), 1);
+		attractionUtilitary = new AttractionUtility(new RewardCentral());
 	}
 
 	@Test
 	public void isWithinAttractionProximity() {
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
+		assertTrue(attractionUtilitary.isWithinAttractionProximity(attraction, attraction));
 	}
 
 	@Test
@@ -50,8 +38,8 @@ public class TestRewardsService {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 
-		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-		boolean nearAttraction = rewardsService.nearAttraction(user.getLastVisitedLocation(), attraction);
+		attractionUtilitary.setProximityBuffer(Integer.MAX_VALUE);
+		boolean nearAttraction = attractionUtilitary.nearAttraction(user.getLastVisitedLocation(), attraction);
 
 		assertEquals(nearAttraction, true);
 	}
