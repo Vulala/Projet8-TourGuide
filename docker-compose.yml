@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+ tourguide:
+  container_name : tourguide
+  image: tourguide
+  build: ./TourGuideContainer
+  network_mode: "host"
+
+ location:
+  container_name : service-location
+  image: servicelocation
+  build: ./LocationContainer
+  network_mode: "host"
+
+ rewards:
+  container_name : service-rewards
+  image: servicerewards
+  build: ./RewardsContainer
+  network_mode: "host"
