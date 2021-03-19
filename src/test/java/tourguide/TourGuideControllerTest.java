@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -23,6 +25,7 @@ import tourguide.service.ServiceLocationFeignClient;
 import tourguide.service.ServiceRewardsFeignClient;
 import tourguide.user.UserCoordinates;
 import tourguide.user.UserNearbyAttractions;
+import tourguide.user.UserPreferences;
 
 @WebMvcTest(TourGuideController.class)
 class TourGuideControllerTest {
@@ -132,5 +135,23 @@ class TourGuideControllerTest {
 		// ASSERT
 		assertEquals(status, 200);
 		verify(locationFeignClient, times(1)).getTripDeals(any(String.class));
+	}
+
+	@DisplayName("PUT : /setUserPreferences")
+	@Test
+	void givenSettingTheUserPreferences_whenSetUserPreferences_thenItCorrectlyChangeTheUserPreferencesWithTheProvidedData()
+			throws Exception {
+		// ARRANGE
+		when(locationFeignClient.setUserPreferences(any(String.class), any(UserPreferences.class))).thenReturn("");
+
+		// ACT
+		MvcResult mvcResult = this.mockMvc.perform(put("/setUserPreferences?userName=userName")
+				.contentType(MediaType.APPLICATION_JSON).content("{\"attractionProximity\":\"0\"}")).andDo(print())
+				.andReturn();
+		int status = mvcResult.getResponse().getStatus();
+
+		// ASSERT
+		assertEquals(status, 200);
+		verify(locationFeignClient, times(1)).setUserPreferences(any(String.class), any(UserPreferences.class));
 	}
 }

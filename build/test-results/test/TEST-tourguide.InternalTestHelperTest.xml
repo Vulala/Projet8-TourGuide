@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="tourguide.InternalTestHelperTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-03-19T12:09:29" hostname="VULCAIN-PC" time="0.087">
+  <properties/>
+  <testcase name="addUser()" classname="tourguide.InternalTestHelperTest" time="0.042"/>
+  <testcase name="getAllUsers()" classname="tourguide.InternalTestHelperTest" time="0.004"/>
+  <testcase name="setAndInitializeTheInternalUsers()" classname="tourguide.InternalTestHelperTest" time="0.038"/>
+  <system-out><![CDATA[13:09:29.835 [Test worker] DEBUG tourguide.helper.InternalTestHelper - Created 10 internal test users.
+]]></system-out>
+  <system-err><![CDATA[mars 19, 2021 1:09:29 PM org.javamoney.moneta.DefaultMonetaryContextFactory createMonetaryContextNonNullConfig
+INFOS: Using custom MathContext: precision=256, roundingMode=HALF_EVEN
+]]></system-err>
+</testsuite>

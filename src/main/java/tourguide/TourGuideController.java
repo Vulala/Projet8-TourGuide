@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +13,7 @@ import tourguide.service.ServiceLocationFeignClient;
 import tourguide.service.ServiceRewardsFeignClient;
 import tourguide.user.UserCoordinates;
 import tourguide.user.UserNearbyAttractions;
+import tourguide.user.UserPreferences;
 
 /**
  * TourGuideController is the main controller of the application. <br>
@@ -90,7 +93,7 @@ public class TourGuideController {
 
 	/**
 	 * GET mapping to get the user's trip deals. <br>
-	 * URI : http://localhost:8080/getAllCurrentLocations <br>
+	 * URI : http://localhost:8080/getTripDeals <br>
 	 * 
 	 * @param userName
 	 * @return json
@@ -100,4 +103,15 @@ public class TourGuideController {
 		return serviceLocationFeignClient.getTripDeals(userName);
 	}
 
+	/**
+	 * PUT mapping to set the user's preferences to refine the trip deals. <br>
+	 * URI : http://localhost:8080/setUserPreferences?userName={internalUser0} <br>
+	 * 
+	 * @param userName
+	 * @return json
+	 */
+	@PutMapping("/setUserPreferences")
+	public String setUserPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
+		return serviceLocationFeignClient.setUserPreferences(userName, userPreferences);
+	}
 }

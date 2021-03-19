@@ -16,7 +16,16 @@ public class UserPreferences {
 	private int numberOfAdults = 1;
 	private int numberOfChildren = 0;
 
-	protected UserPreferences() {
+	public UserPreferences() {
+	}
+
+	public UserPreferences(int attractionProximity, int tripDuration, int ticketQuantity, int numberOfAdults,
+			int numberOfChildren) {
+		this.attractionProximity = attractionProximity;
+		this.tripDuration = tripDuration;
+		this.ticketQuantity = ticketQuantity;
+		this.numberOfAdults = numberOfAdults;
+		this.numberOfChildren = numberOfChildren;
 	}
 
 	public void setAttractionProximity(int attractionProximity) {
@@ -73,6 +82,14 @@ public class UserPreferences {
 
 	public void setNumberOfChildren(int numberOfChildren) {
 		this.numberOfChildren = numberOfChildren;
+	}
+
+	@Override
+	public String toString() {
+		return "UserPreferences [attractionProximity=" + attractionProximity + ", currency=" + currency
+				+ ", lowerPricePoint=" + lowerPricePoint + ", highPricePoint=" + highPricePoint + ", tripDuration="
+				+ tripDuration + ", ticketQuantity=" + ticketQuantity + ", numberOfAdults=" + numberOfAdults
+				+ ", numberOfChildren=" + numberOfChildren + "]";
 	}
 
 }

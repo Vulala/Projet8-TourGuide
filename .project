@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Project08</name>
+	<name>Project08-TourGuide</name>
 	<comment></comment>
 	<projects/>
 	<natures>
@@ -14,10 +14,6 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
-			<arguments/>
-		</buildCommand>
-		<buildCommand>
-			<name>org.springframework.ide.eclipse.boot.validation.springbootbuilder</name>
 			<arguments/>
 		</buildCommand>
 	</buildSpec>

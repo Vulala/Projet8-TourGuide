@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import tourguide.TourGuideController;
 import tourguide.user.UserCoordinates;
 import tourguide.user.UserNearbyAttractions;
+import tourguide.user.UserPreferences;
 
 /**
  * ServiceLocationFeignClient is used by Feign to build http request. <br>
@@ -30,4 +33,7 @@ public interface ServiceLocationFeignClient {
 
 	@GetMapping(value = "/getTripDeals")
 	String getTripDeals(@RequestParam("userName") String userName);
+
+	@PutMapping(value = "/setUserPreferences")
+	String setUserPreferences(@RequestParam("userName") String userName, @RequestBody UserPreferences userPreferences);
 }

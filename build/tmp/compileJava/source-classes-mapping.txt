@@ -1,30 +1,24 @@
-tourguide/Application.java
- tourguide.Application
-tourguide/user/UserPreferences.java
- tourguide.user.UserPreferences
 tourguide/user/UserNearbyAttractions.java
  tourguide.user.UserNearbyAttractions
-tourguide/user/NearbyAttractions.java
- tourguide.user.NearbyAttractions
-tourguide/user/UserLocation.java
- tourguide.user.UserLocation
-tourguide/thread/Tracker.java
- tourguide.thread.Tracker
+tourguide/user/Coordinates.java
+ tourguide.user.Coordinates
 tourguide/user/User.java
  tourguide.user.User
-tourguide/TourGuideController.java
- tourguide.TourGuideController
-tourguide/thread/service/ThreadUserService.java
- tourguide.thread.service.ThreadUserService
-tourguide/user/UserReward.java
- tourguide.user.UserReward
-tourguide/service/RewardsService.java
- tourguide.service.RewardsService
-tourguide/TourGuideModule.java
- tourguide.TourGuideModule
-tourguide/service/TourGuideService.java
- tourguide.service.TourGuideService
+tourguide/service/ServiceRewardsFeignClient.java
+ tourguide.service.ServiceRewardsFeignClient
 tourguide/helper/InternalTestHelper.java
  tourguide.helper.InternalTestHelper
-tourguide/thread/UserRewardsRunnable.java
- tourguide.thread.UserRewardsRunnable
+tourguide/user/UserReward.java
+ tourguide.user.UserReward
+tourguide/user/UserCoordinates.java
+ tourguide.user.UserCoordinates
+tourguide/user/NearbyAttractions.java
+ tourguide.user.NearbyAttractions
+tourguide/user/UserPreferences.java
+ tourguide.user.UserPreferences
+tourguide/service/ServiceLocationFeignClient.java
+ tourguide.service.ServiceLocationFeignClient
+tourguide/TourGuideController.java
+ tourguide.TourGuideController
+tourguide/Application.java
+ tourguide.Application

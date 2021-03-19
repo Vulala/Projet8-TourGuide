@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="tourguide.TourGuideControllerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2021-03-19T12:09:36" hostname="VULCAIN-PC" time="0.658">
+  <properties/>
+  <testcase name="GET : /getTripDeals" classname="tourguide.TourGuideControllerTest" time="0.245"/>
+  <testcase name="GET : /" classname="tourguide.TourGuideControllerTest" time="0.012"/>
+  <testcase name="Injected Components Are Rightly Setup" classname="tourguide.TourGuideControllerTest" time="0.128"/>
+  <testcase name="GET : /getRewards" classname="tourguide.TourGuideControllerTest" time="0.011"/>
+  <testcase name="PUT : /setUserPreferences" classname="tourguide.TourGuideControllerTest" time="0.187"/>
+  <testcase name="GET : /getAllCurrentLocations" classname="tourguide.TourGuideControllerTest" time="0.029"/>
+  <testcase name="GET : /getLocation" classname="tourguide.TourGuideControllerTest" time="0.01"/>
+  <testcase name="GET : /getNearbyAttractions" classname="tourguide.TourGuideControllerTest" time="0.026"/>
+  <system-out><![CDATA[13:09:29.961 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+13:09:29.997 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+13:09:30.088 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [tourguide.TourGuideControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
+13:09:30.117 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [tourguide.TourGuideControllerTest], using SpringBootContextLoader
+13:09:30.125 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [tourguide.TourGuideControllerTest]: class path resource [tourguide/TourGuideControllerTest-context.xml] does not exist
+13:09:30.126 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [tourguide.TourGuideControllerTest]: class path resource [tourguide/TourGuideControllerTestContext.groovy] does not exist
+13:09:30.126 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [tourguide.TourGuideControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+13:09:30.127 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [tourguide.TourGuideControllerTest]: TourGuideControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:09:30.258 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [tourguide.TourGuideControllerTest]
+13:09:30.428 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [H:\Users\Vulcain\Documents\_Dev\Java\Projet Parcours\workspace\Project08-TourGuide\build\classes\java\main\tourguide\Application.class]
+13:09:30.442 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration tourguide.Application for test class tourguide.TourGuideControllerTest
+13:09:30.450 [Test worker] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [tourguide.TourGuideControllerTest]: using defaults.
+13:09:30.450 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+13:09:30.466 [Test worker] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+13:09:30.466 [Test worker] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+13:09:30.466 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@7d3a89fe, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@45c562b2, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@bfd7353, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4122170d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@68fe03ae, org.springframework.test.context.event.EventPublishingTestExecutionListener@6402cf1, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@66c7a081, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@378c592b, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2ff7cf07, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@28d759ac, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@73cf279f, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@26df6dcc]
+13:09:30.482 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@95a577 testClass = TourGuideControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@7b8bdcee testClass = TourGuideControllerTest, locations = '{}', classes = '{class tourguide.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@d033f35, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@20d47f87, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@ba24a7ed, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@2256632f, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@7f2bde78, [ImportsContextCustomizer@50fc401 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@94b3bc0, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@7d9b41f2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@7d0f6ca, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@0], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+13:09:30.598 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.4.0)
+
+2021-03-19 13:09:33.790  INFO 6480 --- [    Test worker] tourguide.TourGuideControllerTest        : Starting TourGuideControllerTest using Java 1.8.0_232 on Vulcain-PC with PID 6480 (started by Vulcain in H:\Users\Vulcain\Documents\_Dev\Java\Projet Parcours\workspace\Project08-TourGuide)
+2021-03-19 13:09:33.790  INFO 6480 --- [    Test worker] tourguide.TourGuideControllerTest        : No active profile set, falling back to default profiles: default
+2021-03-19 13:09:36.251  INFO 6480 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-19 13:09:36.759  INFO 6480 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2021-03-19 13:09:36.759  INFO 6480 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2021-03-19 13:09:36.775  INFO 6480 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 16 ms
+2021-03-19 13:09:36.827  INFO 6480 --- [    Test worker] tourguide.TourGuideControllerTest        : Started TourGuideControllerTest in 6.213 seconds (JVM running for 10.418)
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /getTripDeals
+       Parameters = {userName=[userName]}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#getTripDeals(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = []
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#index()
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"text/plain;charset=UTF-8", Content-Length:"25"]
+     Content type = text/plain;charset=UTF-8
+             Body = Greetings from TourGuide!
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /getRewards
+       Parameters = {userName=[userName]}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#getRewards(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = []
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = PUT
+      Request URI = /setUserPreferences
+       Parameters = {userName=[userName]}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"27"]
+             Body = {"attractionProximity":"0"}
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#setUserPreferences(String, UserPreferences)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"text/plain;charset=UTF-8", Content-Length:"0"]
+     Content type = text/plain;charset=UTF-8
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /getAllCurrentLocations
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#getAllCurrentLocations()
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"application/json"]
+     Content type = application/json
+             Body = []
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /getLocation
+       Parameters = {userName=[userName]}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#getLocation(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = []
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /getNearbyAttractions
+       Parameters = {userName=[userName]}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = tourguide.TourGuideController
+           Method = tourguide.TourGuideController#getNearbyAttractions(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = []
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
